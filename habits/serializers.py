@@ -29,8 +29,12 @@ class HabitSerializer(ModelSerializer):
 
         # related pleasant habit только привычка с признаком приятной привычки
         # habit = data.get(self.related_pleasant_habit)
-        if data["pleasant_habit"] is False:
+        if (
+            data["pleasant_habit"] is False
+            and data["related_pleasant_habit"] is not None
+        ):
             habit = data["related_pleasant_habit"]
+            # habit = Habit.objects.filter(pk=habit_id.id)
             if habit.pleasant_habit is False:
                 raise ValidationError(
                     "Связанной привычкой может быть только привычка с признаком приятной привычки"

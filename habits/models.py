@@ -14,7 +14,7 @@ class Habit(models.Model):
         verbose_name="Место",
         help_text="Введите место",
     )
-    time = models.TimeField(
+    time = models.DateTimeField(
         verbose_name="Время",
         help_text="Введите дату и время для начала привычки в формате YYYY-MM-DD HH:mm",
     )
