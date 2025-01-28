@@ -1,0 +1,90 @@
+services:
+  web:
+    build: .
+    command: bash -c "python manage.py migrate && gunicorn config.wsgi:applocation bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    expose:
+      - "8000"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ./.env
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+  redis:
+    image: redis:latest
+    restart: on-failure
+    expose:
+      - "6379"
+    volumes:
+      - ./redisdata:/data
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    tty: true
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+
+
+
+  """celery:
+      build: .
+      stdin_open: true
+      tty: true
+      command: celery -A config worker -l INFO -P eventlet
+      restart: on-failure
+      volumes:
+        - .:/app
+      env_file:
+        - .env
+      depends_on:
+        - db
+        - app
+        - redis"""
+
+
+
+
+
+    celery-beat:
+    build: .
+    stdin_open: true
+    tty: true
+    command: celery -A config beat -l info
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - app
+      - redis
+      - celery
+    env_file:
+      - .env
