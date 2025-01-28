@@ -143,7 +143,7 @@ TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:8000"]
-CSRF_TRUSTED_ORIGINS = ["https://example.com", "http://localhost:3000"]
+tiCSRF_TRUSTED_ORIGINS = ["https://example.com", "http://localhost:8000"]
 
 CORS_ALLOW_ALL_ORIGINS = False
 
@@ -162,3 +162,6 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": timedelta(minutes=1),
     },
 }
+
+if DEBUG:
+    MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware')
