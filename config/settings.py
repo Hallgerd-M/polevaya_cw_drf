@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,11 +81,11 @@ REST_FRAMEWORK = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("NAME"),
-        "USER": os.getenv("USER"),
-        "PASSWORD": os.getenv("PASSWORD"),
-        "HOST": os.getenv("HOST"),
-        "PORT": os.getenv("PORT"),
+        "NAME": os.getenv("POSTGRES_NAME"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
         "OPTIONS": {"options": "-c client_encoding=utf8"},
     }
 }
@@ -141,6 +141,13 @@ SIMPLE_JWT = {
 
 TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+CASHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+    }
+}
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:8000"]
 tiCSRF_TRUSTED_ORIGINS = ["https://example.com", "http://localhost:8000"]
