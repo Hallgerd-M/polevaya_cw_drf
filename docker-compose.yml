@@ -45,35 +45,22 @@ services:
       retries: 5
     tty: true
 
-volumes:
-  postgres_data:
-  redis_data:
+  celery:
+    build: .
+    stdin_open: true
+    tty: true
+    command: celery -A config worker -l INFO -P eventlet
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - app
+      - redis
+    env_file:
+      - .env
 
-networks:
-  default:
-
-
-
-  """celery:
-      build: .
-      stdin_open: true
-      tty: true
-      command: celery -A config worker -l INFO -P eventlet
-      restart: on-failure
-      volumes:
-        - .:/app
-      env_file:
-        - .env
-      depends_on:
-        - db
-        - app
-        - redis"""
-
-
-
-
-
-    celery-beat:
+  celery-beat:
     build: .
     stdin_open: true
     tty: true
@@ -88,3 +75,11 @@ networks:
       - celery
     env_file:
       - .env
+
+volumes:
+  - .:/code
+  - postgres_data:
+  - redis_data:
+
+networks:
+  default:
